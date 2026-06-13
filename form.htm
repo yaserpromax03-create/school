@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نموذج التسجيل المدرسي المترابط</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body class="bg-slate-50 font-sans min-h-screen flex items-center justify-center p-4 md:p-8">
+
+    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-xl max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 gap-8 border border-slate-100">
+        
+        <div>
+            <div class="mb-6 border-b pb-3 border-slate-100">
+                <h2 class="text-2xl font-bold text-slate-800">طلب تسجيل طالب</h2>
+                <p class="text-sm text-slate-500 mt-1">يرجى ملء الحقول التالية بعناية</p>
+            </div>
+            
+            <form id="registrationForm" class="space-y-4">
+                
+                <div>
+                    <label class="block text-sm font-semibold text-slate-7xl mb-1.5">الاسم الثلاثي <span class="text-red-500">*</span></label>
+                    <input type="text" id="fullName" required placeholder="أدخل الاسم الكامل" class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-slate-7xl mb-1.5">رقم التواصل <span class="text-red-500">*</span></label>
+                    <input type="tel" id="phone" required placeholder="09xxxxxxxx" class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all text-left" dir="ltr">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-slate-7xl mb-1.5">المدرسة السابقة <span class="text-red-500">*</span></label>
+                    <input type="text" id="previousSchool" required placeholder="اسم المدرسة السابقة" class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-slate-7xl mb-1.5">المدرسة الراغب بالتسجيل بها <span class="text-slate-400 font-normal">(اختياري)</span></label>
+                    <select id="targetSchool" class="w-full px-4 py-2.5 border border-slate-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all cursor-pointer">
+                        <option value="بدر الدين الحسني (الشاغور)">بدر الدين الحسني (الشاغور)</option>
+                        <option value="حسن حبنكة (الميدان)">حسن حبنكة (الميدان)</option>
+                        <option value="الإحسان (ببيلا)">الإحسان (ببيلا)</option>
+                        <option value="عبد الكريم الرفاعي (كفرسوسة)">عبد الكريم الرفاعي (كفرسوسة)</option>
+                    </select>
+                </div>
+
+                <button type="submit" id="submitBtn" class="w-full bg-blue-600 hover:bg-blue-7xl text-white font-medium py-3 rounded-lg transition-colors cursor-pointer mt-6 shadow-md shadow-blue-100 flex items-center justify-center">
+                    <span>تقديم الطلب الآن</span>
+                </button>
+            </form>
+        </div>
+
+        <div class="bg-slate-50 rounded-2xl p-6 flex flex-col items-center justify-center border border-slate-100 text-center">
+            <div class="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center mb-3">
+                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h.01M16 20h2M4 4h16v16H4V4z"></path></svg>
+            </div>
+            <h3 class="text-lg font-bold text-slate-800 mb-1">رمز الاستجابة السريع (الباركود)</h3>
+            <p class="text-xs text-slate-500 mb-6 max-w-[250px]">شارك هذا الباركود ليتمكن الطلاب من فتح نموذج التسجيل مباشرة عبر الموبايل</p>
+            
+            <div id="qrcode" class="bg-white p-4 rounded-xl shadow-md border border-slate-200/60 inline-block transition-transform hover:scale-105 duration-300"></div>
+            
+            <div class="mt-5 text-xs text-blue-600 font-mono bg-blue-50/50 hover:bg-blue-50 border border-blue-100/50 py-1.5 px-3 rounded-lg break-all select-all cursor-pointer max-w-full" id="currentUrl"></div>
+        </div>
+
+    </div>
+
+<script>
+        // توليد الباركود تلقائياً بناءً على الرابط الجديد للموقع أونلاين
+        window.addEventListener('DOMContentLoaded', (event) => {
+            // الرابط الجديد الخاص بك
+            const currentLink = "https://comfy-tapioca-89d612.netlify.app";
+            document.getElementById('currentUrl').innerText = currentLink;
+
+            new QRCode(document.getElementById("qrcode"), {
+                text: currentLink,
+                width: 170,
+                height: 170,
+                colorDark : "#1e293b", 
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
+        });
+
+        // كود إرسال البيانات لجدول جوجل إكسل
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerText = "جاري إرسال البيانات...";
+
+            const googleScriptUrl = "https://script.google.com/macros/s/AKfycbwrcmddIjRJYz2sPOS7TYXawWU5J9jwPKC2XGi4ZoBXYAtOglLjHY2Ml3icZ5wFY9s/exec"; 
+
+            const formData = {
+                fullName: document.getElementById('fullName').value,
+                phone: document.getElementById('phone').value,
+                previousSchool: document.getElementById('previousSchool').value,
+                targetSchool: document.getElementById('targetSchool').value
+            };
+
+            fetch(googleScriptUrl, {
+                method: 'POST',
+                mode: 'no-cors',
+                cache: 'no-cache',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            })
+            .then(() => {
+                alert('تم إرسال طلبك بنجاح وحفظه في جدول البيانات!');
+                document.getElementById('registrationForm').reset();
+                submitBtn.disabled = false;
+                submitBtn.innerText = "تقديم الطلب الآن";
+            })
+            .catch(error => {
+                alert('حدث خطأ أثناء الإرسال، يرجى المحاولة لاحقاً.');
+                console.error('Error:', error);
+                submitBtn.disabled = false;
+                submitBtn.innerText = "تقديم الطلب الآن";
+            });
+        });
+    </script>
+</body>
+</html>
